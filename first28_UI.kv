@@ -1,0 +1,257 @@
+<LabelWrap>:
+	size_hint_y: 1
+	pos_hint: {'center_y': .5}
+	text_size: self.width, None
+	height: self.texture_size[1]
+
+<CheckBoxSymptoms@CheckBox>:
+	pos_hint: {'center_x': .1, 'center_y': .5}
+	color: (1,1,1,1)
+	
+<SymptomsButton>:
+	background_color: (1,0,0,1)
+	size_hint: (1, .3)
+	
+<DehydrationSet>:
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			size_hint: 1, .3
+			pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+			text: 'My First 28 Dehydration Symptoms'
+			bold: True
+			font_size: '20sp'
+			canvas.before:
+				Color:
+					rgb: (0,.5,.5)
+				Rectangle:
+					pos: self.pos
+					size: self.size
+		Label:
+			text: 'What symptoms are your baby experiencing?'
+			font_size: '16sp'
+			size_hint: 1, .2
+		GridLayout:
+			rows: 7
+			cols: 2
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Skin pinch goes back slowly"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Baby's lips are dry or parched"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)	
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Baby's fontanel appears sunken"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)					
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Baby's eyes appears sunken"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Behavior changes (Lethargic/Unconsciousness/Irritable/Restlessness)"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Decrease or absence of tears"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Thirsty while breastfeeding"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			
+		SymptomsButton:
+			id: dehydration
+			text: "Submit Dehydration"
+
+<AriSet>:
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			size_hint: 1, .3
+			pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+			text: 'My First 28 ARI Symptoms'
+			bold: True
+			font_size: '20sp'
+			canvas.before:
+				Color:
+					rgb: (0,.5,.5)
+				Rectangle:
+					pos: self.pos
+					size: self.size
+		Label:
+			text: 'What symptoms are your baby experiencing?'
+			font_size: '16sp'
+			size_hint: 1, .2
+		GridLayout:
+			rows: 3
+			cols: 2
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Breath rate greater than 60 breaths per minute"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Fever or body temperature more than 28 deg C"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)	
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Chest appears indrawn"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)					
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Experiencing convulsions"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Abnormally sleepy or difficult to wake up"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			BoxLayout:
+				orientation: 'horizontal'
+				LabelWrap:
+					text: "Wheezing sound coming out of baby"
+				CheckBoxSymptoms:
+					on_active: root.increaseScore(self.active)
+			
+		SymptomsButton:
+			id: ari
+			text: "Submit ARI"
+			
+<AddProfile>:
+	background_color: (1, 0, 0, 1)
+<AllTabs>:
+	feeding_info: feed.text
+	diapers_info: diapers.text
+	size_hint: 1,1
+	pos_hint: {'center_x': .5, 'center_y': .5}
+    do_default_tab: False
+	tab_width: self.size[0] / len(self.tab_list)
+	TabbedPanelItem:
+		text: 'Add Records'
+		BoxLayout:
+			orientation: 'vertical'
+			Label:
+				text: 'Feedings'
+			DigitRecord:
+				id: feed
+				size_hint: 1, .4
+				multiline: False
+			Label:
+				text: 'Diapers'
+			DigitRecord:
+				id: diapers
+				size_hint: 1, .4
+				multiline: False
+			AddRecord:
+				size_hint: 1, .5
+				text: 'Add Record'
+				
+			
+    TabbedPanelItem:
+        text: 'Profile'
+        BoxLayout:
+            Label:
+                text: 'Second tab content area'
+            Button:
+                text: 'Button that does nothing'	
+<MainMenu>:
+	FloatLayout:
+		tabs: t
+		AllTabs:
+			id: t
+<NewProfile>:
+	bby_name: bn.text
+	bby_weight: bw.text
+	bby_height: bh.text
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			text: 'My First 28'
+			bold: True
+			font_size: '40sp'
+			canvas.before:
+				Color:
+					rgb: (.5,.5,0)
+				Rectangle:
+					pos: self.pos
+					size: self.size
+		BoxLayout:
+			orientation: 'horizontal'
+			Label:
+				text: 'Baby Name'
+			TextInput:
+				id: bn
+				size_hint: 1, .4
+				pos_hint: {'center_x': .1, 'center_y': .5}
+				multiline: False
+		BoxLayout:
+			orientation: 'horizontal'
+			Label:
+				text: 'Birth Weight'
+			DigitRecord:
+				id: bw
+				hint_text: 'NN lbs'
+				size_hint: 1, .4
+				pos_hint: {'center_x': .1, 'center_y': .5}
+				multiline: False
+		BoxLayout:
+			orientation: 'horizontal'
+			Label:
+				text: 'Birth Height'
+			DigitRecord:
+				id: bh
+				hint_text: 'NN cms'
+				size_hint: 1, .4
+				pos_hint: {'center_x': .1, 'center_y': .5}
+				multiline: False
+		BoxLayout:
+			orientation: 'horizontal'
+			Label:
+				text: 'Full Term'
+			ToggleButton:
+				text: 'Yes'
+				group: 'full_term'
+			ToggleButton:
+				text: 'No'
+				group: 'full_term'
+		BoxLayout:
+			orientation: 'horizontal'
+			Label:
+				text: 'Normal at time of discharge'
+			ToggleButton:			
+				text: 'Yes'
+				group: 'pathological'
+			ToggleButton:
+				text: 'No'
+				group: 'pathological'
+		AddProfile:
+			text: 'Save Profile'
+			
+

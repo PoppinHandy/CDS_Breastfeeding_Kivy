@@ -7,30 +7,30 @@
 <CheckBoxSymptoms@CheckBox>:
 	pos_hint: {'center_x': .1, 'center_y': .5}
 	color: (1,1,1,1)
+
+<AddProfile>:
+	background_color: (1, 0, 0, 1)
 	
 <SymptomsButton>:
 	background_color: (1,0,0,1)
 	size_hint: (1, .3)
+
+<First28ScreenManager>:
+	MainMenu:
+		name: 'Menu'
+		id: Main_Menu
+	NewProfile:
+		name: 'NewProfile'
+		id: New_Profile
+	DehydrationSet:
+		name: 'Dehydration_Questions'
+		id: Dehydration_Set
+	AriSet:
+		name: 'Ari_Questions'
+		id: Ari_Set
 	
 <DehydrationSet>:
-	BoxLayout:
-		orientation: 'vertical'
-		Label:
-			size_hint: 1, .3
-			pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-			text: 'My First 28 Dehydration Symptoms'
-			bold: True
-			font_size: '20sp'
-			canvas.before:
-				Color:
-					rgb: (0,.5,.5)
-				Rectangle:
-					pos: self.pos
-					size: self.size
-		Label:
-			text: 'What symptoms are your baby experiencing?'
-			font_size: '16sp'
-			size_hint: 1, .2
+	RiskLayout:
 		GridLayout:
 			rows: 7
 			cols: 2
@@ -39,42 +39,49 @@
 				LabelWrap:
 					text: "Skin pinch goes back slowly"
 				CheckBoxSymptoms:
+					id: dehydrationS1
 					on_active: root.increaseScore(self.active)
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Baby's lips are dry or parched"
 				CheckBoxSymptoms:
+					id: dehydrationS2
 					on_active: root.increaseScore(self.active)	
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Baby's fontanel appears sunken"
 				CheckBoxSymptoms:
+					id: dehydrationS3
 					on_active: root.increaseScore(self.active)					
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Baby's eyes appears sunken"
 				CheckBoxSymptoms:
+					id: dehydrationS4
 					on_active: root.increaseScore(self.active)
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Behavior changes (Lethargic/Unconsciousness/Irritable/Restlessness)"
 				CheckBoxSymptoms:
+					id: dehydrationS5
 					on_active: root.increaseScore(self.active)
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Decrease or absence of tears"
 				CheckBoxSymptoms:
+					id: dehydrationS6
 					on_active: root.increaseScore(self.active)
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Thirsty while breastfeeding"
 				CheckBoxSymptoms:
+					id: dehydrationS7
 					on_active: root.increaseScore(self.active)
 			
 		SymptomsButton:
@@ -82,24 +89,7 @@
 			text: "Submit Dehydration"
 
 <AriSet>:
-	BoxLayout:
-		orientation: 'vertical'
-		Label:
-			size_hint: 1, .3
-			pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-			text: 'My First 28 ARI Symptoms'
-			bold: True
-			font_size: '20sp'
-			canvas.before:
-				Color:
-					rgb: (0,.5,.5)
-				Rectangle:
-					pos: self.pos
-					size: self.size
-		Label:
-			text: 'What symptoms are your baby experiencing?'
-			font_size: '16sp'
-			size_hint: 1, .2
+	RiskLayout:
 		GridLayout:
 			rows: 3
 			cols: 2
@@ -108,72 +98,76 @@
 				LabelWrap:
 					text: "Breath rate greater than 60 breaths per minute"
 				CheckBoxSymptoms:
+					id: ariS1
 					on_active: root.increaseScore(self.active)
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Fever or body temperature more than 28 deg C"
 				CheckBoxSymptoms:
+					id: ariS2
 					on_active: root.increaseScore(self.active)	
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Chest appears indrawn"
 				CheckBoxSymptoms:
+					id: ariS3
 					on_active: root.increaseScore(self.active)					
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Experiencing convulsions"
 				CheckBoxSymptoms:
+					id: ariS4
 					on_active: root.increaseScore(self.active)
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Abnormally sleepy or difficult to wake up"
 				CheckBoxSymptoms:
+					id: ariS5
 					on_active: root.increaseScore(self.active)
 			BoxLayout:
 				orientation: 'horizontal'
 				LabelWrap:
 					text: "Wheezing sound coming out of baby"
 				CheckBoxSymptoms:
+					id: ariS6
 					on_active: root.increaseScore(self.active)
 			
 		SymptomsButton:
 			id: ari
 			text: "Submit ARI"
+
+<RiskLayout>:
+	orientation: 'vertical'
+	Label:
+		size_hint: 1, .3
+		pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+		text: 'My First 28 ARI Symptoms'
+		bold: True
+		font_size: '20sp'
+		canvas.before:
+			Color:
+				rgb: (0,.5,.5)
+			Rectangle:
+				pos: self.pos
+				size: self.size
+	Label:
+		text: 'What symptoms are your baby experiencing?'
+		font_size: '16sp'
+		size_hint: 1, .2
 			
-<AddProfile>:
-	background_color: (1, 0, 0, 1)
 <AllTabs>:
-	feeding_info: feed.text
-	diapers_info: diapers.text
+	feeding_info: add_records_tab.ids.feed.text
+	diapers_info: add_records_tab.ids.diapers.text
 	size_hint: 1,1
 	pos_hint: {'center_x': .5, 'center_y': .5}
     do_default_tab: False
 	tab_width: self.size[0] / len(self.tab_list)
-	TabbedPanelItem:
-		text: 'Add Records'
-		BoxLayout:
-			orientation: 'vertical'
-			Label:
-				text: 'Feedings'
-			DigitRecord:
-				id: feed
-				size_hint: 1, .4
-				multiline: False
-			Label:
-				text: 'Diapers'
-			DigitRecord:
-				id: diapers
-				size_hint: 1, .4
-				multiline: False
-			AddRecord:
-				size_hint: 1, .5
-				text: 'Add Record'
-				
-			
+	AddRecordsTab:
+		id: add_records_tab
     TabbedPanelItem:
         text: 'Profile'
         BoxLayout:
@@ -181,11 +175,50 @@
                 text: 'Second tab content area'
             Button:
                 text: 'Button that does nothing'	
+				
+<AddRecordsTab>:
+	text: 'Add Records'
+	BoxLayout:
+		orientation: 'vertical'
+		padding: 20
+		spacing: 20
+		BoxLayout:
+			Label:
+				text: 'Date'
+				text_size: self.size
+				halign: 'left'
+			CalendarWidget:
+				id: calendar
+		DateRecord:
+			id: date
+			text_hint: 'dd/dd/yyyy'
+			size_hint: .7, .3
+			multiline: False
+		Label:
+			text: 'Feedings'
+			text_size: self.size
+			halign: 'left'
+		DigitRecord:
+			id: feed
+			size_hint: .7, .3
+			multiline: False
+		Label:
+			text: 'Diapers'
+			text_size: self.size
+			halign: 'left'
+		DigitRecord:
+			id: diapers
+			size_hint: .7, .3
+			multiline: False
+		AddRecord:
+			size_hint: 1, .5
+			text: 'Add Record'
+			background_color: (1, 0, 0, 1)		
 <MainMenu>:
 	FloatLayout:
-		tabs: t
 		AllTabs:
-			id: t
+			id: tabManager
+			
 <NewProfile>:
 	bby_name: bn.text
 	bby_weight: bw.text
@@ -254,4 +287,3 @@
 		AddProfile:
 			text: 'Save Profile'
 			
-

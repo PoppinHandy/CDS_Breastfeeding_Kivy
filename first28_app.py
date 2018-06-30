@@ -8,16 +8,16 @@ First 28 Decision Support Breastfeeding app
 """
 
 from kivy.app import App
-from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
-from kivy.uix.tabbedpanel import TabbedPanel
+from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
 from kivy.lang import Builder
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.storage.jsonstore import JsonStore
+from KivyCalendar import CalendarWidget
 #from kivy.uix.checkbox import CheckBox
 #from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -26,8 +26,7 @@ import re
 Builder.load_file('first28_UI.kv')
 
 
-class LabelWrap(Label):
-    pass
+
 # NEXT STEPS: CLEAR MENU SCREEN ONCE GOT BACK AND WORK ON ARI
 class AlertButton(Button):
     def __init__(self, **kwargs):
@@ -47,7 +46,7 @@ class SymptomsButton(Button):
         super(SymptomsButton, self).__init__(**kwargs)
     def on_press(self):
         # Make sure to go back to main menu
-        self.parent.parent.parent.current = 'Menu'
+        App.get_running_app().root.current = 'Menu'
         
         # Customize text based on button name
         if self.text == 'Submit Dehydration':
@@ -62,8 +61,10 @@ class SymptomsButton(Button):
             acknowledgeButton.add_widget(Button(text='Acknowledge and exit', on_press=popupDehydrationSummary.dismiss, size_hint=(1, .5)))
             popupDehydrationSummary.open()
         elif self.text == 'Submit ARI':
+            masterAriScore = App.get_running_app().root.screens[3].ariScore
+            App.get_running_app().root.screens[3].clearScreen()
             acknowledgeButton = BoxLayout(orientation='vertical')
-            symptomsText = "Your baby is showing " + str(self.parent.parent.ariScore) + " out of 6 symptoms for ARI."
+            symptomsText = "Your baby is showing " + str(masterAriScore) + " out of 6 symptoms for ARI."
             if self.parent.parent.ariScore >= 4:
                 symptomsText += "\nYou should consider consulting your doctor."
             else:
@@ -79,26 +80,46 @@ class DigitRecord(TextInput):
         super(DigitRecord, self).__init__(**kwargs)
         self.multiline=False
     def insert_text(self, substring, from_undo=False):
-        pat = re.compile('[^\d+]') # Match only digits
+        pat = re.compile('[^\d+]') # Compiles a regex to match non-digits
         s = re.sub(pat, '', substring) # Replaces non-digits with no space
         
         # Return the filtered string
         return super(DigitRecord, self).insert_text(s, from_undo=from_undo)
 
+class DateRecord(TextInput):
+    def __init__(self, **kwargs):
+        super(DateRecord, self).__init__(**kwargs)
+        self.multiline=False
+    def insert_text(self, substring, from_undo=False):
+        pat = re.compile('[^[\d+/\d+/\d+]') # Compile a regex to match non-dates
+        s = re.sub(pat, '', substring) # Replaces non-digits with no space
+        
+        # Return the filtered string
+        return super(DateRecord, self).insert_text(s, from_undo=from_undo)
+    
 # Holds all tabs for the main menu    
 class AllTabs(TabbedPanel):
     feeding_info = StringProperty('')
     diapers_info = StringProperty('')
+    ari_Score = NumericProperty(0)
+    dehydration_Score = NumericProperty(0)
     def __init__(self, **kwargs):
         super(AllTabs, self).__init__(**kwargs)
-    
-    # Saves records and then calls the appropriate popup
+        
+
+
+class AddRecordsTab(TabbedPanelItem):
+    def __init__(self, **kwargs):
+        super(AddRecordsTab, self).__init__(**kwargs)   
+        # Saves records and then calls the appropriate popup
     def saveRecords(self):
         store = JsonStore("D:/Git/Kivy_Apps/First28/records.json")
         # Storing record info
-        store.put('record1', feeding=self.feeding_info, diaper=self.diapers_info)
-        feeding_int = int(self.feeding_info)
-        diapers_int = int(self.diapers_info)
+        feedingText = App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.feed.text
+        diapersText = App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.diapers.text
+        store.put('record1', feeding=feedingText, diaper=diapersText)
+        feeding_int = int(feedingText)
+        diapers_int = int(diapersText)
         if feeding_int >= 6:
             if diapers_int < 6:
                 # do dehydration
@@ -121,11 +142,11 @@ class AllTabs(TabbedPanel):
             bothLayout.add_widget(AlertButton(text='ARI', size_hint=(1, .5)))
             dismissButton2.add_widget(bothLayout)
             popupAll.open()
-            # Dehydration and ARI
-
+            # Dehydration and ARI    
+    
+    
 # For all records and such
 class MainMenu(Screen):
-    tabs = ObjectProperty(None)
     def __init__(self, **kwargs):
         super(MainMenu, self).__init__(**kwargs)
 
@@ -148,16 +169,18 @@ class AddProfile(Button):
     def __init__(self, **kwargs):
         super(AddProfile, self).__init__(**kwargs)
     def on_press(self):
-        # Cause parent = Box Layout and parent of parent = screen
-        self.parent.parent.saveProfileInfo()
+        # Accessing new profile screen method to save profile info
+        App.get_running_app().root.screens[1].saveProfileInfo()
 
 # Button adds records for feeding and diapers to json files
 class AddRecord(Button):
     def __init__(self, **kwargs):
         super(AddRecord, self).__init__(**kwargs)
     def on_press(self):
-        # Call to screen parent to save records in JSON
-        if self.parent.parent.parent.ids.feed.text == "" or self.parent.parent.parent.ids.diapers.text =="":
+        # Call to MainMenu screen to save records in JSON
+        feedingText = App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.feed.text
+        diapersText = App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.diapers.text
+        if feedingText == "" or diapersText == "":
             alertButton = BoxLayout(orientation='vertical')
             alertButton.add_widget(Label(text='Please enter a number for each entry.'))
             popupAlert = Popup(title="Entry Error", content=alertButton, auto_dismiss=False,size_hint=(.5,.5))
@@ -165,11 +188,11 @@ class AddRecord(Button):
             popupAlert.open()
         else:
             # Save record to json file
-            self.parent.parent.parent.saveRecords()
+            App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.saveRecords()
             
-            # Reset
-            self.parent.parent.parent.ids.feed.text = ""
-            self.parent.parent.parent.ids.diapers.text = ""
+            # Reset using root app path to all tab
+            App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.feed.text = ""
+            App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.diapers.text = ""
             
 
 # Handles logic for dehydration question set and keeps track of score
@@ -182,6 +205,12 @@ class DehydrationSet(Screen):
             self.dehydrationScore += 1
         else:
             self.dehydrationScore -= 1
+    def clearScreen(self):
+        # Look for all the checkbox IDs, which are labeled in a specific format, and set them to False
+        for k in self.ids:
+            if 'dehydrationS' in k:
+                if self.ids[k].active:
+                    self.ids[k].active = False
 
 # Handles logic for ARI question set and keeps track of score
 class AriSet(Screen):
@@ -193,15 +222,28 @@ class AriSet(Screen):
             self.ariScore += 1
         else:
             self.ariScore -= 1
+    def clearScreen(self):
+        # Look for all the checkbox IDs, which are labeled in a specific format, and set them to False
+        for k in self.ids:
+            if 'ariS' in k:
+                if self.ids[k].active:
+                    self.ids[k].active = False
+
+# UI Template for risk screens          
+class RiskLayout(BoxLayout):
+    def __init__(self, **kwargs):
+        super(RiskLayout, self).__init__(**kwargs)
+            
+class LabelWrap(Label):
+    pass
+
+class First28ScreenManager(ScreenManager):
+    pass
 
 class first_28_App(App):
     def build(self):
         store = JsonStore ('D:/Git/Kivy_Apps/First28/profile.json')
-        sm = ScreenManager()
-        sm.add_widget(MainMenu(name='Menu'))
-        sm.add_widget(NewProfile(name='NewProfile'))
-        sm.add_widget(DehydrationSet(name="Dehydration_Questions"))
-        sm.add_widget(AriSet(name="Ari_Questions"))
+        sm = First28ScreenManager()
         if store.exists('main_profile'):
             sm.current = 'Menu'
         else:
@@ -210,3 +252,10 @@ class first_28_App(App):
 
 if __name__ == '__main__':
     first_28_App().run()
+# =================================================NOTES==========================================================
+# =============================================================================
+#         sm.add_widget(MainMenu(name='Menu')) # [0]
+#         sm.add_widget(NewProfile(name='NewProfile')) #[1]
+#         sm.add_widget(DehydrationSet(name="Dehydration_Questions")) #[2]
+#         sm.add_widget(AriSet(name="Ari_Questions")) #[3]
+# =============================================================================

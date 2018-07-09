@@ -11,9 +11,32 @@
 <AddProfile>:
 	background_color: (1, 0, 0, 1)
 	
-<SymptomsButton>:
+<SubmitSymptoms>:
 	background_color: (1,0,0,1)
 	size_hint: (1, .3)
+
+<AlertButton>:
+	size_hint: (1, .3)
+	pos_hint:{'center_x': .5, 'center_y':.5}
+	
+<RiskLayout>:
+	orientation: 'vertical'
+	Label:
+		size_hint: 1, .3
+		pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+		text: 'My First 28 ARI Symptoms'
+		bold: True
+		font_size: '20sp'
+		canvas.before:
+			Color:
+				rgb: (0,.5,.5)
+			Rectangle:
+				pos: self.pos
+				size: self.size
+	Label:
+		text: 'What symptoms are your baby experiencing?'
+		font_size: '16sp'
+		size_hint: 1, .2
 
 <First28ScreenManager>:
 	MainMenu:
@@ -28,7 +51,38 @@
 	AriSet:
 		name: 'Ari_Questions'
 		id: Ari_Set
-	
+	AlertScreen:
+		name: 'Alert_Screen'
+		id: Alert_Set
+	SummaryScreen:
+		name: 'Summary_Screen'
+		id: Summary_Set
+		
+<AlertScreen>:
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			size_hint: 1, .3
+			pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+			text: 'Risk Alert!'
+			bold: True
+			font_size: '20sp'
+			canvas.before:
+				Color:
+					rgb: (1,0,0)
+				Rectangle:
+					pos: self.pos
+					size: self.size
+		Label:
+			text: 'Your child is at risk for the following:'
+			pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+			size_hint: 1, .2
+			font_size: '15sp'
+		BoxLayout:
+			orientation: 'horizontal'
+			id: button_space
+		
+
 <DehydrationSet>:
 	RiskLayout:
 		GridLayout:
@@ -84,7 +138,7 @@
 					id: dehydrationS7
 					on_active: root.increaseScore(self.active)
 			
-		SymptomsButton:
+		SubmitSymptoms:
 			id: dehydration
 			text: "Submit Dehydration"
 
@@ -136,29 +190,48 @@
 					id: ariS6
 					on_active: root.increaseScore(self.active)
 			
-		SymptomsButton:
+		SubmitSymptoms:
 			id: ari
 			text: "Submit ARI"
 
-<RiskLayout>:
-	orientation: 'vertical'
-	Label:
-		size_hint: 1, .3
-		pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-		text: 'My First 28 ARI Symptoms'
-		bold: True
-		font_size: '20sp'
-		canvas.before:
-			Color:
-				rgb: (0,.5,.5)
-			Rectangle:
-				pos: self.pos
-				size: self.size
-	Label:
-		text: 'What symptoms are your baby experiencing?'
-		font_size: '16sp'
-		size_hint: 1, .2
-			
+<SummaryScreen>:
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			size_hint: 1, .3
+			pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+			text: 'Summary'
+			bold: True
+			font_size: '20sp'
+			canvas.before:
+				Color:
+					rgb: (.5,.5,0)
+				Rectangle:
+					pos: self.pos
+					size: self.size
+		BoxLayout:
+			orientation: 'horizontal'
+			Label:
+				text: "Severity: "
+				font_size: '15sp'
+				bold: True
+			BoxLayout:
+				orientation: 'vertical'
+				id: severity_score
+		BoxLayout:
+			orientation: 'horizontal'
+			Label:
+				text: "Steps you can take: "
+				font_size: '15sp'
+				bold: True
+			BoxLayout:
+				id: resources_set
+				orientation: 'vertical'
+		Button:
+			text: "Back to Main Menu"
+			on_press: root.manager.current = "Menu"
+			size_hint: 1, .3
+				
 <AllTabs>:
 	feeding_info: add_records_tab.ids.feed.text
 	diapers_info: add_records_tab.ids.diapers.text
@@ -169,12 +242,17 @@
 	AddRecordsTab:
 		id: add_records_tab
     TabbedPanelItem:
-        text: 'Profile'
+        text: 'Resources'
         BoxLayout:
-            Label:
-                text: 'Second tab content area'
+			orientation: 'vertical'
             Button:
-                text: 'Button that does nothing'	
+                text: 'Dehydration'
+				size_hint: 1, .3
+			Button:
+				text: 'ARI'
+				size_hint: 1, .3
+	TabbedPanelItem:
+		text: 'Log'
 				
 <AddRecordsTab>:
 	text: 'Add Records'
@@ -191,7 +269,7 @@
 				id: calendar
 		DateRecord:
 			id: date
-			text_hint: 'dd/dd/yyyy'
+			hint_text: 'dd/dd/yyyy'
 			size_hint: .7, .3
 			multiline: False
 		Label:

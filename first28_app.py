@@ -18,7 +18,6 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty, DictProperty
 from kivy.storage.jsonstore import JsonStore
-from KivyCalendar import CalendarWidget
 #from kivy.clock import Clock
 from kivy.uix.label import Label
 import re
@@ -145,7 +144,9 @@ class AddRecordsTab(TabbedPanelItem):
         super(AddRecordsTab, self).__init__(**kwargs)   
         # Saves records and then calls the appropriate popup
     def saveRecords(self):
-        store = JsonStore("D:/Git/Kivy_Apps/First28/records.json")
+        # For testing
+        #store = JsonStore("D:/Git/Kivy_Apps/First28/records.json") 
+        store = JsonStore("records.json")
         # Storing record info
         feedingText = App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.feed.text
         diapersText = App.get_running_app().root.screens[0].ids.tabManager.ids.add_records_tab.ids.diapers.text
@@ -179,7 +180,9 @@ class NewProfile(Screen):
     bby_height = StringProperty('')
     
     def saveProfileInfo(self):
-        store = JsonStore("D:/Git/Kivy_Apps/First28/profile.json")
+        # For testing
+        #store = JsonStore("D:/Git/Kivy_Apps/First28/profile.json")
+        store = JsonStore("profile.json")
         # Storing user information
         store.put('main_profile', name=self.bby_name, weight=self.bby_weight, height=self.bby_height)
         
@@ -260,7 +263,9 @@ class First28ScreenManager(ScreenManager):
 
 class first_28_App(App):
     def build(self):
-        store = JsonStore ('D:/Git/Kivy_Apps/First28/profile.json')
+        # For testing
+        #store = JsonStore ('D:/Git/Kivy_Apps/First28/profile.json')
+        store = JsonStore ('profile.json')
         sm = First28ScreenManager()
         if store.exists('main_profile'):
             sm.current = 'Menu'
